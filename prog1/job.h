@@ -1,5 +1,24 @@
 #ifndef JOB_H
 #define JOB_H
+
+int scmp(char* a,char* b){
+   int same = 1;
+   int i = 0;
+   while((i <= 20) && (same) && ((a[i] != '\0') && (b[i] != '\0'))){
+      if(a[i] != b[i]){ same = 0;}
+      i++;
+   }
+   if(i == 20){ same = 0;}
+   if((same) && !(a[i] == b[i])){ same = 0;}
+   
+   
+   return same;
+}
+
+
+
+
+
 class Job{
    public:
       Job(){};
@@ -15,8 +34,8 @@ class Job{
       int operator<=(Job j);
       int operator==(Job j);
       friend ostream& operator<<(ostream& os,Job j);
-   private:
       int priority;
+   private:
       int uid;
       char name[20];
 };
@@ -57,9 +76,9 @@ int Job::operator<=(Job j){
    return priority >= j.priority;
 }
 int Job::operator==(Job j){
-   return priority == j.priority;
+   return scmp(name,j.name);
 }
 ostream& operator<<(ostream& os,Job j){
-   os << j.uid << "   " << j.name << "   " << j.priority << "\n";
+   os << "" << j.uid << "   " << j.name << "   " << j.priority << "\n";
 }
 

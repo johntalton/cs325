@@ -4,8 +4,8 @@
 #define MaxSize 40
 /****************************
 * This is a Mim or Max Heap.
-*    0 = min heap
-*    1 = max heap
+*    1 = min heap
+*    0 = max heap
 * it can be used with any class that
 * has the > < >= <= operators defined.
 *
@@ -30,8 +30,11 @@ class MinMaxHeap{
       int isEmpty();
       void Pup(int x,Type newvalue);
       void Pdown(int x,Type newvalue);
-    
+      int findItem(Type item);
+      void changePri(Type j,int p);
+      void remove(Type j);
       void p();
+      void ptofile(int uid);
    private:
       Type *heap;
       int isMax;  // 1 = maxheap , 0 = minheap
@@ -67,7 +70,7 @@ int MinMaxHeap<Type>::isFull(){
 
 template <class Type>
 int MinMaxHeap<Type>::isEmpty(){
-   if(current) return 0;
+   if(current>0) return 0;
    return 1;
 }
 
@@ -147,6 +150,45 @@ Type* MinMaxHeap<Type>::Del(Type& value){
    return &value;
 }
       
+template <class Type>
+int MinMaxHeap<Type>::findItem(Type item){
+   int i,found;
+   found = 0;
+   i = -1;
+   while((i <= current) && (!found)){
+      i++;
+      if(heap[i] == item){ found = 1; }
+   }
+   if(!found){ i = -1;}
+   return i;
+}
+
+template <class Type>
+void MinMaxHeap<Type>::changePri(Type j,int p){
+   int i;
+   i = findItem(j);
+   cout << "Priority is: " << heap[i].priority;
+   if(i != -1){
+      heap[i].priority = p;
+      cout << " now: " << heap[i].priority << endl;
+      Pup(i,heap[i]);
+      Pdown(i,heap[i]);
+      
+   }
+   
+}
+
+template <class Type>
+void MinMaxHeap<Type>::remove(Type j){
+   int i;
+   i = findItem(j);
+   if((i != -1) && !isEmpty()){
+      heap[i] = heap[current];
+      current--;
+      Pdown(i,heap[i]);
+      Pup(i,heap[i]);
+   }
+}
 
 
 template <class Type>
@@ -164,4 +206,20 @@ template <class Type>
 void MinMaxHeap<Type>::p(){
  int i;
  for(i = 1; i <= current; i++) cout << heap[i];
+}
+
+template <class Type>
+void MinMaxHeap<Type>::ptofile(int uid){
+ int i;
+ char fname[20];
+ char c[1];
+ c[0] = uid + 48;
+ char ext[5] = { ".out" };
+ strcpy(fname,"cli_");
+ strcat(fname,c);
+ strcat(fname,ext);
+ 
+ ofstream f(fname,ios::out);
+ for(i = 1; i <= current; i++) f << heap[i];
+ f.close();
 }
